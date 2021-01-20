@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import numpy as np
 import Conversion as Conv
-from Numeric_Disk_Energy import *
+from Numeric_Hex_Energy import *
 from Numeric_Fiber_Energy import *
 
 class Generate:

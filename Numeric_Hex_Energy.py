@@ -5,7 +5,7 @@ import Shape as Sh
 class BD:
     def __init__(self,Nmax,P):
         self.Nmax = Nmax
-        self.Range = P.Range(Nmax)
+        self.Range = P.HRange(Nmax)
         self.Systems = np.empty(self.Range.shape[0],dtype=object)
         #self.Systems = np.array([
         #Sys.System(
@@ -18,7 +18,7 @@ class BD:
     def Get_E(self,n,P):
         if n>= self.Range.shape[0]:
             n=-1
-        DiskArray = Sh.Disk(self.Range[n],ParticleType=P.ParticleType)
+        DiskArray = Sh.Parallel(self.Range[n],ParticleType=P.ParticleType)
         if self.Systems[n]:
             return (self.Systems[n].Energy+Sh.SurfaceEnergy(DiskArray,J=P.J,ParticleType=P.ParticleType))/Sh.Np(DiskArray)
         else :
@@ -40,5 +40,5 @@ class BD:
             E1=E2
             E2 = self.Get_E(n2,P)
             if n2==self.Range.shape[0]-1:
-                return Sh.Np(Sh.Disk(self.Range[n2],ParticleType=P.ParticleType)),E2
-        return Sh.Np(Sh.Disk(self.Range[n1],ParticleType=P.ParticleType)),E1
+                return Sh.Np(Sh.Parallel(self.Range[n2],ParticleType=P.ParticleType)),E2
+        return Sh.Np(Sh.Parallel(self.Range[n1],ParticleType=P.ParticleType)),E1
