@@ -32,6 +32,7 @@ class Generate:
                                     ParticleType=self.PTYPE)
             bd = BD(Nmax,P)
             bf = BF(WidthMax,P)
+            print(Nu[i,0])
             for j in range(Nu.shape[1]):
                 #nu[i,j] = cte for i
                 Color[i,j] = self.GetBestAggregate(Nu[i,j],Gamma[i,j],bd,bf)

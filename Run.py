@@ -7,26 +7,26 @@ import matplotlib
 matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'PD_Triangle_L_5'
+NAME = 'PD_Hex_L_5'
 numin = 0.34
 numax = 0.99
 Gammamin = 0.
 Gammamax = 1.25
-NpointsNu = 3
-NpointsGamma=3
-Nmax = 1500
-Wmax = 30
+NpointsNu = 5
+NpointsGamma=10
+Nmax = 500
+Wmax = 10
 
 L = 5.
-PTYPE = 'Triangle'
+PTYPE = 'Hexagon'
 EPS = 0.01
 G = Generate(L,EPS,PTYPE)
-#Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax)
-Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
+Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax)
+#Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
 #np.savetxt('Gamma.txt',Gamma)
 #np.savetxt('nu.txt',nu)
 #np.savetxt('Color.txt',Color)
-print(Color)
+#print(Color)
 
 # Create the figure, and save it
 
@@ -35,7 +35,7 @@ fig,ax = plt.subplots(figsize=(16,10))
 cmap = cm.Reds#.reversed()
 cmap.set_bad(color=BulkColor)
 masked=np.ma.masked_array(Color,Color>=0)
-psm = ax.pcolormesh(Gamma,nu,-masked,cmap=cm.Reds,norm=mcolors.LogNorm())
+psm = ax.pcolormesh(Gamma,nu,-masked,cmap=cm.Reds)#,norm=mcolors.LogNorm())
 psm2=ax.pcolormesh(Gamma,nu,np.ma.masked_array(Color,Color<=0),cmap=cm.Blues)
 
 #psm = ax.pcolormesh(J,Ka,-masked,cmap=cmap)#,norm=colors.LogNorm())

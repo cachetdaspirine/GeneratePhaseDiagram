@@ -102,7 +102,8 @@ class AnalyticToSimul:
             Size = int(4*(Nmax/6)**0.5+0.5)
             return np.arange(2,Size,2)
         elif self.ParticleType == 'Hexagon':
-            Size = int(1./6.* (3+np.sqrt(3*(4*N-1))))
+            Size = int(1./6.* (3+np.sqrt(3*(4*Nmax-1))))
+            return np.arange(2,Size,2)
     def write(self,All=False):
             return np.arange(1,Size,1)
     def HSize(self,N):
