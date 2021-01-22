@@ -94,13 +94,15 @@ def Fiber(Width,Length,ParticleType='Triangle'):
     elif ParticleType=='Hexagon':
         return Fiber2(Width,Length)
 def Fiber2(W,L):
-        Res=np.array([np.zeros(L) for _ in range(W+int(L//2+0.5))])
-        for l in range(L):
-            if l%2==0:
-                Res[l//2:W+l//2,l]=1
-            else :
-                Res[l//2+1:W+l//2,l]=1
-        return np.flip(np.transpose(Res),0)
+    if W==1:
+        return Fiber4(W,L)
+    Res=np.array([np.zeros(L) for _ in range(W+int(L//2+0.5))])
+    for l in range(L):
+        if l%2==0:
+            Res[l//2:W+l//2,l]=1
+        else :
+            Res[l//2+1:W+l//2,l]=1
+    return np.flip(np.transpose(Res),0)
 def Fiber3(W,L):
         Res=np.array([np.zeros(L) for _ in range(W+int(L//2+0.5))])
         for l in range(L):
@@ -113,7 +115,29 @@ def Fiber4(W,L):
     Res=np.array([np.zeros(W) for _ in range(L)])
     Res[:]=1
     return np.transpose(Res)
-
+def D(ij,ij0,PType):
+    if PType == 'Hexagon':
+        return (((ij[0]-ij0[0])+0.5*((ij[1]-ij0[1])))**2+((ij[1]-ij0[1])*0.866)**2)**0.5
+    else :
+        return (((ij[0]-ij0[0])*0.5)**2+((ij[1]-ij0[1])*0.866)**2)**0.5
+def Disk(L,ParticleType):
+    if ParticleType == 'Hexagon':
+        Ly,Lx = L,L
+    else:
+        Ly,Lx = L//2,L
+    State = np.array([[1 for _ in range(Ly+1)] for _ in range(Lx+1)])
+    ij0 = (Lx//2,Ly//2)
+    R = Lx//4
+    for i in range(State.shape[0]):
+        for j in range(State.shape[1]):
+            if D(ij0,(i,j),ParticleType) > R:
+                State[i,j]=0
+    if ParticleType == 'Triangle':
+        for i in range(State.shape[0]):
+            for j in range(State.shape[1]):
+                if Get_Neighbors(State,(i,j),Occupied=True,ParticleType=ParticleType).__len__()== 0:
+                    State[i,j] = 0
+    return State
 def Get_Neighbors(Array,ij,Occupied=False,Free=False,Border=False,ParticleType = 'Triangle'):
         Lx, Ly = Array.shape[0], Array.shape[1]
         if ParticleType == 'Triangle':
@@ -157,3 +181,51 @@ def SurfaceEnergy(Array,J=1.,ParticleType='Triangle'):
             if Array[ij] == 1:
                 surface+=Get_Neighbors(Array,ij,Free=True,Border=True,ParticleType=ParticleType).__len__()
     return J*surface
+def GetSurfaceParticle(Array,ParticleType = 'Triangle'):
+    SurfParticle = 0
+    for i in range(Array.shape[0]):
+        for j in range(Array.shape[1]):
+            ij = (i,j)
+            if Array[ij] == 1:
+                if Get_Neighbors(Array,ij,Free=True,Border=True,ParticleType=ParticleType).__len__() != 0:
+                    SurfParticle+=1
+    return SurfParticle
+def Lacunar(Size, Order =1, ParticleType='Triangle'):
+    Array = Parallel(Size,ParticleType)
+    if ParticleType == 'Hexagon':
+        Ly,Lx = Array.shape[1]//2,Array.shape[0]//2
+    else:
+        Ly,Lx = Array.shape[1]//2,Array.shape[0]//2
+    if Lx%2 == 1:
+        Lx+=1
+    if Ly%2 ==1 :
+        Ly+=1
+    # initialize the list of the particle to remove
+    To_Delete = {(Lx,Ly)}
+    while To_Delete.__len__()!= 0:
+        # Stor the initial To_delete
+        #Old_To_Delete = To_Delete.copy()
+        New_Delete = set()
+        # add the neighboring ij's
+        for ij in To_Delete:
+            Array[ij] = 0
+            for neigh in Get_Lacune(ij,Order,ParticleType):
+                # if they follow two conditions :
+                # They are in the box
+                try :
+                    # They are not already empty
+                    if Array[neigh]==1:
+                        New_Delete.add(neigh)
+                except IndexError:
+                    pass
+        # Repete with the new added  one
+        To_Delete = New_Delete
+    return Array
+def Get_Lacune(ij,Order,ParticleType):
+    i,j=ij[0],ij[1]
+    if Order ==0 and ParticleType == 'Hexagon':
+        return  [(i-1,j+2),(i+1,j+1),(i+2,j-1),(i+1,j-2),(i-1,j-1),(i-2,j+1)]
+    if Order == 1 and ParticleType == 'Hexagon':
+        return [(j,j+2),(i+2,j),(i+2,j-2),(i,j-2),(i-2,j),(i-2,j+2)]
+    if Order == 2 and ParticleType == 'Hexagon':
+        return [(i-2,j+4),(i+2,j+2),(i+4,j-2),(i+2,j-4),(i-2,j-2),(i-4,j+2)]

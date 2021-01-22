@@ -67,9 +67,11 @@ class AnalyticToSimul:
         if ParticleType=='Triangle':
             self.FB = self.fb*np.sqrt(3)/4 #Bulk free energy per particle
             self.J = self.l*self.fb*(1+self.nu)*self.Gamma/2
+            self.Flacune = np.inf
         elif ParticleType=='Hexagon':
             self.FB = self.fb* 3*np.sqrt(3)/2*(1./3.+epsilon**2/3.)
             self.J = self.Gamma*(self.l*(1+self.nu)*self.fb*(1/3+epsilon**2/3.))/2
+            self.Flacune = 3*(1/3+self.epsilon**2/3.)*self.fb*self.l*(1+self.nu)/2*self.Gamma
         if writting :
             print('k='+str(self.k))
             print('kA='+str(self.kA))

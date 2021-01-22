@@ -10,7 +10,8 @@ class BF:
     def __init__(self,WidthMax,P):
         #Make an array of system for each W
         self.Wmax = WidthMax
-        self.Aspect = np.array([1./3.,1./5.,0.1])
+        #self.Aspect = np.array([1./3.,1./5.,0.1])
+        self.Aspect = np.array([0.1, 0.05 , 0.01])
         self.Systems = np.array([np.empty(3,dtype=object)#np.array([
         #Sys.System(
         #Sh.Fiber(w,int(w/A),ParticleType=P.ParticleType),
@@ -20,6 +21,14 @@ class BF:
         #ParticleType=P.ParticleType)
         #for A in self.Aspect])
         for w in range(0,WidthMax,1)])
+    def Np(self,W,L,P):
+        if P.ParticleType=='Hexagon':
+            if W ==1:
+                return L
+            else :
+                return (W-0.5)*L
+        else :
+            return W*L
     def CheckInfFiber(self,w,P):
         E=list()
         if w >= self.Wmax:
@@ -37,14 +46,14 @@ class BF:
             #loop over several aspect ratio
             FiberArray = Sh.Fiber(w,int(w/A),ParticleType=P.ParticleType)
             SurfaceEnergy = Sh.SurfaceEnergy(FiberArray,J=P.J,ParticleType=P.ParticleType)
-            E.append((S.Energy+SurfaceEnergy)/(w*int(w/A)))
+            E.append((S.Energy+SurfaceEnergy)/self.Np(w,int(w/A),P))#(w*int(w/A)))
 
         popt,pconv = curve_fit(line,self.Aspect,E)
         print('a, b = '+str(popt))
         fig,ax = plt.subplots()
         ax.plot(self.Aspect,line(self.Aspect,popt[0],popt[1]))
         ax.scatter(self.Aspect,E)
-        return fig, ax  
+        return fig, ax
     def Get_Einf(self,w,P):
         E=list()
         if w >= self.Wmax:
@@ -62,7 +71,7 @@ class BF:
             #loop over several aspect ratio
             FiberArray = Sh.Fiber(w,int(w/A),ParticleType=P.ParticleType)
             SurfaceEnergy = Sh.SurfaceEnergy(FiberArray,J=P.J,ParticleType=P.ParticleType)
-            E.append((S.Energy+SurfaceEnergy)/(w*int(w/A)))
+            E.append((S.Energy+SurfaceEnergy)/self.Np(w,int(w/A),P))#(w*int(w/A)))
         try :
             popt,pconv = curve_fit(line,self.Aspect,E)
         except ValueError:
