@@ -11,22 +11,22 @@ NAME = 'Low_Gamma_L_7_5'
 numin = 0.34
 numax = 0.99
 Gammamin = 0.
-Gammamax = 0.4
+Gammamax = 1.2
 NpointsNu = 10
 NpointsGamma=50
-Nmax = 1000
-Wmax = 4
-OrderMax = 2
+Nmax = 10
+Wmax = 10
+OrderMax = 0
 
-L = 7.5
-PTYPE = 'Hexagon'
+L = 1.
+PTYPE = 'Triangle'
 EPS = 0.01
 G = Generate(L,EPS,PTYPE)
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
-np.savetxt('G_'+NAME+'.txt',Gamma)
-np.savetxt('nu_'+NAME+'.txt',nu)
-np.savetxt('C_'+NAME+'.txt',Color)
+np.save('G_'+NAME,Gamma)
+np.save('nu_'+NAME,nu)
+np.save('C_'+NAME,Color)
 #print(Color)
 
 # Create the figure, and save it

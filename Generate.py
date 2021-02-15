@@ -1,4 +1,7 @@
 import numpy as np
+import sys
+#sys.path.append('/home/hleroy/Simulation/Extra_Module_py/')
+sys.path.append('/home/hugo/Extra_Module_py/')
 import Conversion as Conv
 from Numeric_Hex_Energy import *
 from Numeric_Fiber_Energy import *
