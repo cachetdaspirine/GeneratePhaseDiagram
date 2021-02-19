@@ -14,9 +14,16 @@ class Generate:
         self.PTYPE = PTYPE
     def GetBestAggregate(self,Nu,Gamma,bd,bf,bb):
         P = Conv.AnalyticToSimul(nu = Nu,Gamma=Gamma,l=self.L,epsilon=self.EPS,writting=False,ParticleType=self.PTYPE)
-        w,Ef = bf.Get_Best_Fiber(P)
-        n,Ed = bd.Get_Best_Disk(P)
-        Order,Eb = bb.Get_Best_Bulk(P)
+        if P.ParticleType == 'Triangle':
+            w1,Ef1 = bf.Get_Best_Fiber(P)
+            w2,Ef2 = 0,np.inf
+            n,Ed = bd.Get_Best_Disk(P)
+            Order,Eb = bb.Get_Best_Bulk(P)
+        else :
+            w1,Ef1 = bf.Get_Best_Fiber(P,1)
+            w2,Ef2 = bf.Get_Best_Fiber(P,2)
+            n,Ed = bd.Get_Best_Disk(P)
+            Order,Eb = bb.Get_Best_Bulk(P)
         # print('Nu = '+str(Nu))
         # print('Gamma = '+str(Gamma))
         # print('Best Fiber energy/width ='+str(Ef)+' '+str(w))
@@ -24,14 +31,17 @@ class Generate:
         # print('Best Lacunar Bulk energy/order ='+str(Eb)+' '+str(Order))
         # print('Bulk free energy = '+str(P.FB))
         # print('Lacunar order 0 = '+str(P.Flacune))
-
-        if Ef<Eb and Ef<Ed and Ef<P.FB :
-            return np.array([0,w,0])
-        elif Ed<Eb and Ed < P.FB:
+        energies = [Ef1,Ef2,Ed,Eb,P.FB]
+        NumBest = np.argmin(energies)
+        if NumBest == 0 :
+            return np.array([0,w1,0])
+        elif NumBest == 1:
+            return np.array([0,-w2,0])
+        elif NumBest == 2:
             return np.array([n,0,0])
-        elif Eb < P.FB:
+        elif NumBest == 3:
             return np.array([0,0,Order+2])
-        else :
+        elif NumBest == 4:
             return np.array([0,0,1])
     def MakePhaseDiagram(self,Numin,Numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,WidthMax,OrderMax):
         Nu,Gamma = np.linspace(Numin,Numax,NpointsNu,dtype=float), np.linspace(Gammamin,Gammamax,NpointsGamma,dtype=float)

@@ -7,19 +7,19 @@ import matplotlib
 matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'Low_Gamma_L_7_5'
+NAME = 'Test'
 numin = 0.34
 numax = 0.99
 Gammamin = 0.
 Gammamax = 1.2
 NpointsNu = 10
 NpointsGamma=50
-Nmax = 10
-Wmax = 10
+Nmax = 100
+Wmax = 20
 OrderMax = 0
 
-L = 1.
-PTYPE = 'Triangle'
+L = 5.
+PTYPE = 'Hexagon'
 EPS = 0.01
 G = Generate(L,EPS,PTYPE)
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
@@ -47,9 +47,12 @@ HexRegion = np.ma.masked_array(Color[:,:,0],Color[:,:,0]<=0)
 psmHex = ax.pcolormesh(Gamma,nu,HexRegion,cmap=cm.Reds)#,norm=mcolors.LogNorm())
 cba=plt.colorbar(psmHex)
 #Define the Fiber Region :
-FiberRegion = np.ma.masked_array(Color[:,:,1],Color[:,:,1]<=0)
-psmFiber = ax.pcolormesh(Gamma,nu,FiberRegion,cmap=cm.Blues)
-cbb=plt.colorbar(psmFiber)
+FiberRegion1 = np.ma.masked_array(Color[:,:,1],Color[:,:,1]<=0)
+psmFiber1 = ax.pcolormesh(Gamma,nu,FiberRegion1,cmap=cm.Blues)
+cbb1=plt.colorbar(psmFiber1)
+FiberRegion2 = np.ma.masked_array(Color[:,:,1],Color[:,:,1]>=0)
+psmFiber2 = ax.pcolormesh(Gamma,nu,FiberRegion2,cmap=cm.Greens)
+cbb2=plt.colorbar(psmFiber2)
 #Define the different bulk regions :
 BulkRegion = np.ma.masked_array(Color[:,:,2],Color[:,:,2]<=0)
 psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap)
@@ -61,7 +64,8 @@ psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap)
 #print(Color[:,:,2])
 
 cba.set_label('Disk Radius',fontsize=20)
-cbb.set_label('fiber width',fontsize=20)
+cbb1.set_label('fiber_1 width',fontsize=20)
+cbb2.set_label('fiber_2 width',fontsize=20)
 plt.xlabel('$\Gamma$ : rescaled surface tension',fontsize=20)
 plt.ylabel('$\\nu$ : Poisson\'s ratio',fontsize=20)
 plt.title('Phase diagram of the analytic applied to finite aggregate',fontsize=20)
