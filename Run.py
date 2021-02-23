@@ -7,18 +7,18 @@ import matplotlib
 matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'Test'
+NAME = 'H_L7_5_FULL'
 numin = 0.34
 numax = 0.99
 Gammamin = 0.
 Gammamax = 1.2
 NpointsNu = 10
 NpointsGamma=50
-Nmax = 100
-Wmax = 20
+Nmax = 4000
+Wmax = 40
 OrderMax = 0
 
-L = 5.
+L = 7.5
 PTYPE = 'Hexagon'
 EPS = 0.01
 G = Generate(L,EPS,PTYPE)
