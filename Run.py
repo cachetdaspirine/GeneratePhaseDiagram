@@ -24,9 +24,9 @@ EPS = 0.01
 G = Generate(L,EPS,PTYPE)
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
-np.save('G_'+NAME,Gamma)
-np.save('nu_'+NAME,nu)
-np.save('C_'+NAME,Color)
+np.save('Res/G_'+NAME,Gamma)
+np.save('Res/nu_'+NAME,nu)
+np.save('Res/C_'+NAME,Color)
 #print(Color)
 
 # Create the figure, and save it
@@ -69,4 +69,4 @@ cbb2.set_label('fiber_2 width',fontsize=20)
 plt.xlabel('$\Gamma$ : rescaled surface tension',fontsize=20)
 plt.ylabel('$\\nu$ : Poisson\'s ratio',fontsize=20)
 plt.title('Phase diagram of the analytic applied to finite aggregate',fontsize=20)
-plt.savefig(NAME+'.pdf')
+plt.savefig('Res/'+NAME+'.pdf')
