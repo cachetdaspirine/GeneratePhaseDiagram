@@ -4,25 +4,31 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import matplotlib.colors as mcolors
 import matplotlib
+import multiprocessing as mp
 matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'H_L7_5_FULL'
-numin = 0.34
+NAME = 'Test'
+numin = 0.
 numax = 0.99
 Gammamin = 0.
-Gammamax = 1.2
-NpointsNu = 10
-NpointsGamma=50
-Nmax = 4000
-Wmax = 40
+Gammamax = 1.3
+NpointsNu = 5
+NpointsGamma=10
+Nmax = 100
+Wmax = 10
 OrderMax = 0
+Expansion= True
 
-L = 7.5
+L = 5.
 PTYPE = 'Hexagon'
 EPS = 0.01
-G = Generate(L,EPS,PTYPE)
+G = Generate(L,EPS,PTYPE,Expansion)
+#Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
+#pool = mp.Pool(4)
+#Gamma,nu,Color = pool.apply(G.MakePhaseDiagram,args=(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax))
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
+#pool.close()
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
 np.save('Res/G_'+NAME,Gamma)
 np.save('Res/nu_'+NAME,nu)
@@ -51,8 +57,8 @@ FiberRegion1 = np.ma.masked_array(Color[:,:,1],Color[:,:,1]<=0)
 psmFiber1 = ax.pcolormesh(Gamma,nu,FiberRegion1,cmap=cm.Blues)
 cbb1=plt.colorbar(psmFiber1)
 FiberRegion2 = np.ma.masked_array(Color[:,:,1],Color[:,:,1]>=0)
-psmFiber2 = ax.pcolormesh(Gamma,nu,FiberRegion2,cmap=cm.Greens)
-cbb2=plt.colorbar(psmFiber2)
+#psmFiber2 = ax.pcolormesh(Gamma,nu,FiberRegion2,cmap=cm.Greens)
+#cbb2=plt.colorbar(psmFiber2)
 #Define the different bulk regions :
 BulkRegion = np.ma.masked_array(Color[:,:,2],Color[:,:,2]<=0)
 psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap)
@@ -65,7 +71,7 @@ psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap)
 
 cba.set_label('Disk Radius',fontsize=20)
 cbb1.set_label('fiber_1 width',fontsize=20)
-cbb2.set_label('fiber_2 width',fontsize=20)
+#cbb2.set_label('fiber_2 width',fontsize=20)
 plt.xlabel('$\Gamma$ : rescaled surface tension',fontsize=20)
 plt.ylabel('$\\nu$ : Poisson\'s ratio',fontsize=20)
 plt.title('Phase diagram of the analytic applied to finite aggregate',fontsize=20)

@@ -6,9 +6,11 @@ import Conversion as Conv
 from Numeric_Hex_Energy import *
 from Numeric_Fiber_Energy import *
 from Numeric_Bulk_Energy import *
+import multiprocessing as mp
 
 class Generate:
-    def __init__(self,L,EPS,PTYPE):
+    def __init__(self,L,EPS,PTYPE,Expansion = False):
+        self.Exp = Expansion
         self.L = L
         self.EPS = EPS
         self.PTYPE = PTYPE
@@ -43,22 +45,43 @@ class Generate:
             return np.array([0,0,Order+2])
         elif NumBest == 4:
             return np.array([0,0,1])
+    def GetColor(self,Nmax,WidthMax,OrderMax,NU,GAMMA):
+        P = Conv.AnalyticToSimul(nu = NU[0],
+                                Gamma=GAMMA[0],
+                                l=self.L,
+                                epsilon=self.EPS,
+                                writting=False,
+                                ParticleType=self.PTYPE)
+        bd = BD(Nmax,P,Expansion = self.Exp)
+        bf = BF(WidthMax,P,Expansion = self.Exp)
+        bb = BB(OrderMax,Nmax,P,Expansion = self.Exp)
+        print(NU[0])
+        res = np.zeros((NU.shape[0],3))
+        for j in range(NU.shape[0]):
+            #nu[i,j] = cte for i
+            res[j] = self.GetBestAggregate(NU[j],GAMMA[j],bd,bf,bb)
+        return res
     def MakePhaseDiagram(self,Numin,Numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,WidthMax,OrderMax):
         Nu,Gamma = np.linspace(Numin,Numax,NpointsNu,dtype=float), np.linspace(Gammamin,Gammamax,NpointsGamma,dtype=float)
         Gamma,Nu = np.meshgrid(Gamma,Nu)
         Color = np.array([np.array([np.zeros(3,dtype=float) for _ in range(Nu.shape[1])]) for _ in range(Nu.shape[0])])
-        for i in range(Nu.shape[0]):
-            P = Conv.AnalyticToSimul(nu = Nu[i,0],
-                                    Gamma=Gamma[i,0],
-                                    l=self.L,
-                                    epsilon=self.EPS,
-                                    writting=False,
-                                    ParticleType=self.PTYPE)
-            bd = BD(Nmax,P)
-            bf = BF(WidthMax,P)
-            bb = BB(OrderMax,Nmax,P)
-            print(Nu[i,0])
-            for j in range(Nu.shape[1]):
+        #pool = mp.Pool(mp.cpu_count())
+        #Color = pool.map(self.GetColoGamma,nu,Color = pool.apply(G.MakePhaseDiagram,args=(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax))r,(Nu,Gamma))
+        #for i in range(Nu.shape[0]):
+        #Color = np.array([pool.apply(self.GetColor,args=(Nmax,WidthMax,OrderMax,Nu[i,:],Gamma[i,:])) for i in range(Nu.shape[0])])
+        Color = np.array([self.GetColor(Nmax,WidthMax,OrderMax,Nu[i,:],Gamma[i,:]) for i in range(Nu.shape[0])])
+        #pool.close()
+            # P = Conv.AnalyticToSimul(nu = Nu[i,0],
+                                    # Gamma=Gamma[i,0],
+                                    # l=self.L,
+                                    # epsilon=self.EPS,
+                                    # writting=False,
+                                    # ParticleType=self.PTYPE)
+            # bd = BD(Nmax,P,Expansion = self.Exp)
+            # bf = BF(WidthMax,P,Expansion = False)
+            # bb = BB(OrderMax,Nmax,P,Expansion = self.Exp)
+            # print(Nu[i,0])
+            # for j in range(Nu.shape[1]):
                 #nu[i,j] = cte for i
-                Color[i,j] = self.GetBestAggregate(Nu[i,j],Gamma[i,j],bd,bf,bb)
+
         return Gamma,Nu,Color
