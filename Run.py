@@ -1,22 +1,21 @@
+import matplotlib
+matplotlib.use('pdf')
 from Generate import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import matplotlib.colors as mcolors
-import matplotlib
-import multiprocessing as mp
-matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'Test'
+NAME = 'Nu0_1Gamma0_1_3L5'
 numin = 0.
 numax = 0.99
 Gammamin = 0.
 Gammamax = 1.3
-NpointsNu = 5
-NpointsGamma=10
-Nmax = 100
-Wmax = 10
+NpointsNu = 50
+NpointsGamma=50
+Nmax = 5000
+Wmax = 50
 OrderMax = 0
 Expansion= True
 
