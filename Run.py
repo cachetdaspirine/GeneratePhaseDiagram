@@ -7,15 +7,15 @@ from matplotlib import cm
 import matplotlib.colors as mcolors
 
 # Data for phase diagram generation
-NAME = 'Nu0_1Gamma0_1_3L5'
+NAME = 'Hexagon_Nu0_1Gamma0_1_3L5'
 numin = 0.
 numax = 0.99
 Gammamin = 0.
 Gammamax = 1.3
 NpointsNu = 50
 NpointsGamma=50
-Nmax = 5000
-Wmax = 50
+Nmax = 2000
+Wmax = 35
 OrderMax = 0
 Expansion= True
 

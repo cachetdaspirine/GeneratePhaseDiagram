@@ -1,7 +1,7 @@
 import numpy as np
 import sys
-sys.path.append('/home/hleroy/Simulation/Extra_Module_py/')
-#sys.path.append('/home/hugo/Extra_Module_py/')
+#sys.path.append('/home/hleroy/Simulation/Extra_Module_py/')
+sys.path.append('/home/hugo/Extra_Module_py/')
 import Conversion as Conv
 from Numeric_Hex_Energy import *
 from Numeric_Fiber_Energy import *
@@ -33,7 +33,10 @@ class Generate:
         # print('Best Lacunar Bulk energy/order ='+str(Eb)+' '+str(Order))
         # print('Bulk free energy = '+str(P.FB))
         # print('Lacunar order 0 = '+str(P.Flacune))
-        energies = [Ef1,Ef2,Ed,Eb,P.FB]
+
+        #energies = [Ef1,Ef2,Ed,Eb,P.FB]
+        #use the numerically compute bulk energy :
+        energies = [Ef1,Ef2,Ed,Eb,GetRealBulk(P)]
         NumBest = np.argmin(energies)
         if NumBest == 0 :
             return np.array([0,w1,0])
