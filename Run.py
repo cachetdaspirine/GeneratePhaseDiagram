@@ -7,26 +7,27 @@ import matplotlib
 matplotlib.use('pdf')
 
 # Data for phase diagram generation
-NAME = 'Low_Gamma_L_7_5'
-numin = 0.34
-numax = 0.99
+numin = 0.
+numax = 0.9
 Gammamin = 0.
-Gammamax = 0.4
-NpointsNu = 10
+Gammamax = 1.2
+NpointsNu = 20
 NpointsGamma=50
 Nmax = 1000
-Wmax = 4
-OrderMax = 2
+Wmax = 20
+OrderMax = 0
+nuRatio=0.9
+NAME = 'NuRatio_'+str(nuRatio)[0]+'_'+str(nuRatio)[2:]
 
-L = 7.5
+L = 5.
 PTYPE = 'Hexagon'
 EPS = 0.01
 G = Generate(L,EPS,PTYPE)
-Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax)
+Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax,nuRatio=nuRatio)
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
-np.savetxt('G_'+NAME+'.txt',Gamma)
-np.savetxt('nu_'+NAME+'.txt',nu)
-np.savetxt('C_'+NAME+'.txt',Color)
+np.save('G_'+NAME+'.npy',Gamma)
+np.save('nu_'+NAME+'.npy',nu)
+np.save('C_'+NAME+'.npy',Color)
 #print(Color)
 
 # Create the figure, and save it
@@ -44,15 +45,15 @@ fig,ax = plt.subplots(figsize=(16,10))
 
 #define the hexagon region :
 HexRegion = np.ma.masked_array(Color[:,:,0],Color[:,:,0]<=0)
-psmHex = ax.pcolormesh(Gamma,nu,HexRegion,cmap=cm.Reds)#,norm=mcolors.LogNorm())
+psmHex = ax.pcolormesh(Gamma,nu,HexRegion,cmap=cm.Reds,shading='auto')#,norm=mcolors.LogNorm())
 cba=plt.colorbar(psmHex)
 #Define the Fiber Region :
 FiberRegion = np.ma.masked_array(Color[:,:,1],Color[:,:,1]<=0)
-psmFiber = ax.pcolormesh(Gamma,nu,FiberRegion,cmap=cm.Blues)
+psmFiber = ax.pcolormesh(Gamma,nu,FiberRegion,cmap=cm.Blues,shading='auto')
 cbb=plt.colorbar(psmFiber)
 #Define the different bulk regions :
 BulkRegion = np.ma.masked_array(Color[:,:,2],Color[:,:,2]<=0)
-psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap)
+psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap,shading='auto')
 #cbc = plt.colorbar(psmBulk)
 #psm = ax.pcolormesh(J,Ka,-masked,cmap=cmap)#,norm=colors.LogNorm())
 #psm2=ax.pcolormesh(J,Ka,np.ma.masked_array(Width,Width<=0),cmap=cm.Blues)
