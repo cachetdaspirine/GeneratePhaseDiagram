@@ -26,9 +26,9 @@ EPS = 0.01
 G = Generate(L,EPS,PTYPE,Expansion)
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax,nuRatio=nuRatio)
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
-np.save('G_'+NAME+'.npy',Gamma)
-np.save('nu_'+NAME+'.npy',nu)
-np.save('C_'+NAME+'.npy',Color)
+np.save('Res/G_'+NAME+'.npy',Gamma)
+np.save('Res/nu_'+NAME+'.npy',nu)
+np.save('Res/C_'+NAME+'.npy',Color)
 #print(Color)
 
 # Create the figure, and save it
