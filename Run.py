@@ -1,10 +1,10 @@
+import matplotlib
+matplotlib.use('pdf')
 from Generate import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import matplotlib.colors as mcolors
-import matplotlib
-matplotlib.use('pdf')
 
 # Data for phase diagram generation
 numin = 0.
@@ -17,12 +17,13 @@ Nmax = 1000
 Wmax = 20
 OrderMax = 0
 nuRatio=0.9
+Expanson=True
 NAME = 'NuRatio_'+str(nuRatio)[0]+'_'+str(nuRatio)[2:]
 
 L = 5.
 PTYPE = 'Hexagon'
 EPS = 0.01
-G = Generate(L,EPS,PTYPE)
+G = Generate(L,EPS,PTYPE,Expansion)
 Gamma,nu,Color = G.MakePhaseDiagram(numin,numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,Wmax,OrderMax,nuRatio=nuRatio)
 #Gamma,nu,Color = np.loadtxt('Gamma.txt',dtype=float),np.loadtxt('nu.txt',dtype=float),np.loadtxt('Color.txt',dtype=float)
 np.save('G_'+NAME+'.npy',Gamma)
@@ -62,8 +63,9 @@ psmBulk = ax.pcolormesh(Gamma,nu,BulkRegion,cmap = cmap,shading='auto')
 #print(Color[:,:,2])
 
 cba.set_label('Disk Radius',fontsize=20)
-cbb.set_label('fiber width',fontsize=20)
+cbb1.set_label('fiber_1 width',fontsize=20)
+#cbb2.set_label('fiber_2 width',fontsize=20)
 plt.xlabel('$\Gamma$ : rescaled surface tension',fontsize=20)
 plt.ylabel('$\\nu$ : Poisson\'s ratio',fontsize=20)
 plt.title('Phase diagram of the analytic applied to finite aggregate',fontsize=20)
-plt.savefig(NAME+'.pdf')
+plt.savefig('Res/'+NAME+'.pdf')

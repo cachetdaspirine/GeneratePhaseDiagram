@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 sys.path.append("/home/hcleroy/Extra_Module_py")
-#sys.path.append("/home/hleroy/Simulation/Extra_Module_py")
+sys.path.append("/home/hleroy/Simulation/Extra_Module_py")
 import Conversion as Conv
 from Numeric_Hex_Energy import *
 from Numeric_Fiber_Energy import *
@@ -9,7 +9,8 @@ from Numeric_Bulk_Energy import *
 import MeasurePoisson as MP
 
 class Generate:
-    def __init__(self,L,EPS,PTYPE):
+    def __init__(self,L,EPS,PTYPE,Expansion = False):
+        self.Exp = Expansion
         self.L = L
         self.EPS = EPS
         self.PTYPE = PTYPE
@@ -30,7 +31,7 @@ class Generate:
             return np.array([n,0,0])
         elif Eb < EBulk:
             return np.array([0,0,Order+2])
-        else :
+        elif NumBest == 4:
             return np.array([0,0,1])
     def MakePhaseDiagram(self,Numin,Numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,WidthMax,OrderMax,nuRatio=1):
         Nu,Gamma = np.linspace(Numin,Numax,NpointsNu,dtype=float), np.linspace(Gammamin,Gammamax,NpointsGamma,dtype=float)
@@ -44,9 +45,9 @@ class Generate:
                                     writting=False,
                                     ParticleType=self.PTYPE,
                                     nu2=Nu[i,0]*nuRatio)
-            bd = BD(Nmax,P,Expansion=True)
-            bf = BF(WidthMax,P,Expansion=True)
-            bb = BB(OrderMax,Nmax,P,Expansion=True)
+            bd = BD(Nmax,P,Expansion=self.Exp)
+            bf = BF(WidthMax,P,Expansion=self.Exp)
+            bb = BB(OrderMax,Nmax,P,Expansion=self.Exp)
             print(Nu[i,0])
             for j in range(Nu.shape[1]):
                 #nu[i,j] = cte for i
