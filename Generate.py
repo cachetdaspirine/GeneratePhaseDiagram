@@ -31,7 +31,7 @@ class Generate:
             return np.array([n,0,0])
         elif Eb < EBulk:
             return np.array([0,0,Order+2])
-        elif NumBest == 4:
+        else:
             return np.array([0,0,1])
     def MakePhaseDiagram(self,Numin,Numax,NpointsNu,Gammamin,Gammamax,NpointsGamma,Nmax,WidthMax,OrderMax,nuRatio=1):
         Nu,Gamma = np.linspace(Numin,Numax,NpointsNu,dtype=float), np.linspace(Gammamin,Gammamax,NpointsGamma,dtype=float)
