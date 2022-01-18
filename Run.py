@@ -16,8 +16,8 @@ NpointsGamma=50
 Nmax = 1000
 Wmax = 20
 OrderMax = 0
-nuRatio=0.9
-Expanson=True
+nuRatio=0.1
+Expansion=True
 NAME = 'NuRatio_'+str(nuRatio)[0]+'_'+str(nuRatio)[2:]
 
 L = 5.
